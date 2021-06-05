@@ -6,7 +6,7 @@ import com.lmg.lmgfood.domain.model.Restaurante;
 
 public interface RestauranteRepository {
 	
-	List<Restaurante> buscarTodas();
+	List<Restaurante> buscarTodos();
 	
 	Restaurante buscarPorId(Long id);
 	

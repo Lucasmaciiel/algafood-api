@@ -11,7 +11,7 @@ import com.lmg.lmgfood.domain.repository.RestauranteRepository;
 public class RestauranteRepositoryImpl  implements RestauranteRepository{
 
 	@Override
-	public List<Restaurante> buscarTodas() {
+	public List<Restaurante> buscarTodos() {
 		return null;
 	}
 
