@@ -1,10 +1,10 @@
 package com.lmg.lmgfood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,11 +41,11 @@ public class CozinhaController {
 
 	@PutMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> atualizar(@RequestBody Cozinha cozinha, @PathVariable Long cozinhaId) {
-		Cozinha cozinhaEncontrada = cozinhaRepository.buscarPorId(cozinhaId);
+		Optional<Cozinha> cozinhaEncontrada = cozinhaRepository.findById(cozinhaId);
 
-		if (cozinhaEncontrada != null) {
-			BeanUtils.copyProperties(cozinha, cozinhaEncontrada, "id"); // ignora a copia do ID
-			return ResponseEntity.ok(cadastroCozinhaService.adicionar(cozinhaEncontrada));
+		if (cozinhaEncontrada.isPresent()) {
+			BeanUtils.copyProperties(cozinha, cozinhaEncontrada.get(), "id"); // ignora a copia do ID
+			return ResponseEntity.ok(cadastroCozinhaService.adicionar(cozinhaEncontrada.get()));
 		}
 
 		return ResponseEntity.notFound().build();
@@ -53,14 +53,15 @@ public class CozinhaController {
 
 	@GetMapping
 	public List<Cozinha> buscarTodas() {
-		return cozinhaRepository.buscarTodas();
+		return cozinhaRepository.findAll();
 	}
 
 	@GetMapping("/{cozinhaId}")
 	public ResponseEntity<Cozinha> buscarPorId(@PathVariable Long cozinhaId) {
-		Cozinha cozinha = cozinhaRepository.buscarPorId(cozinhaId);
-		if (cozinha != null) {
-			return ResponseEntity.ok(cozinha);
+		Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
+		
+		if (cozinha.isPresent()) {
+			return ResponseEntity.ok(cozinha.get());
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}

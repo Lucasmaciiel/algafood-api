@@ -1,16 +1,11 @@
 package com.lmg.lmgfood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.lmg.lmgfood.domain.model.FormaPagamento;
 
-public interface FormaPagamentoRepository {
+@Repository
+public interface FormaPagamentoRepository extends JpaRepository<FormaPagamento, Long> {
 
-	 List<FormaPagamento> buscarTodas();
-	 
-	 FormaPagamento buscarPorId(Long id);
-	
-	 FormaPagamento adicionar(FormaPagamento formaPagamento);
-	 
-	 void remover(FormaPagamento formaPagamento);
 }

@@ -1,17 +1,11 @@
 package com.lmg.lmgfood.domain.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.lmg.lmgfood.domain.model.Restaurante;
 
-public interface RestauranteRepository {
+@Repository
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>{
 	
-	List<Restaurante> buscarTodos();
-	
-	Restaurante buscarPorId(Long id);
-	
-	Restaurante adicionar(Restaurante restaurante);
-	
-	Restaurante remover(Restaurante restaurante);
-
 }
