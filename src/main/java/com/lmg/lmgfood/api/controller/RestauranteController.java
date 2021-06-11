@@ -1,6 +1,7 @@
 package com.lmg.lmgfood.api.controller;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,10 +32,38 @@ public class RestauranteController {
 
 	@Autowired
 	private CadastroRestauranteService cadastroRestauranteService;
-
+	
 	@Autowired
 	private RestauranteRepository restauranteRepository;
-
+	
+	@GetMapping("/taxa-frete")
+	public List<Restaurante> buscarPorTaxaFrete(BigDecimal taxaInicial, BigDecimal taxaFinal){
+		return restauranteRepository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
+	}
+	
+	@GetMapping("/search")
+	public List<Restaurante> buscarPorNomeECozinhaId(String nome, Long cozinhaId){
+		return restauranteRepository.consultarPorNome(nome, cozinhaId);
+	}
+	
+	
+	@GetMapping("/busca/por-nome-taxafrete")
+	public List<Restaurante> buscarPorNomeETaxaFrete(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal){
+		return restauranteRepository.buscarPorNomeETaxaFrete(nome, taxaInicial, taxaFinal);
+	}
+	
+	@GetMapping("/busca/com-frete-gratis")
+	public List<Restaurante> restauranteComFreteGratis(String nome){
+		
+		return restauranteRepository.buscarComFreteGratis(nome);
+	}
+	
+	@GetMapping("/primeiro")
+	public Optional<Restaurante> restaurantePrimeiro() {
+		return restauranteRepository.buscarPrimeiro();
+	}
+	
+	// --------------------------------------------// ----------------------------------------------------------
 	@PostMapping
 	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
 		try {
@@ -52,7 +81,7 @@ public class RestauranteController {
 			Optional<Restaurante> restauranteEncontrado = restauranteRepository.findById(restauranteId);
 
 			if (restauranteEncontrado.isPresent()) {
-				BeanUtils.copyProperties(restaurante, restauranteEncontrado.get(), "id"); // ignora a copia do ID
+				BeanUtils.copyProperties(restaurante, restauranteEncontrado.get(), "id", "formasPagamento", "endereco", "dataCadastro"); // ignora a copia do ID, formasPagamento, endereco
 				return ResponseEntity.ok(cadastroRestauranteService.adicionar(restauranteEncontrado.get()));
 			}
 		} catch (EntidadeNaoEncontradaException e) {

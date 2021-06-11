@@ -33,6 +33,11 @@ public class CozinhaController {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 
+	@GetMapping("/por-nome")
+	public List<Cozinha> buscarPorNome(String nome){
+		return cozinhaRepository.findByNomeContaining(nome);
+	}
+	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public Cozinha adicionar(@RequestBody Cozinha cozinha) {
