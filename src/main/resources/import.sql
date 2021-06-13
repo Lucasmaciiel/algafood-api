@@ -15,6 +15,11 @@ insert into restaurante (id, nome, taxa_frete, cozinha_codigo, endereco_bairro, 
 insert into restaurante (id, nome, taxa_frete, cozinha_codigo, data_cadastro, data_atualizacao) values (2, 'Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp);
 insert into restaurante (id, nome, taxa_frete, cozinha_codigo, data_cadastro, data_atualizacao) values (3, 'Tuk Tuk Comida Indiana', 15.00, 2, utc_timestamp, utc_timestamp);
 
+insert into produto (id, ativo, descricao, nome, preco, restaurante_id) values (1, true, 'Pizza de Calabresa', 'Pizza', 59.90, 1);
+insert into produto (id, ativo, descricao, nome, preco, restaurante_id) values (2, true, 'Pizza de Bacon', 'Pizza', 69.90, 2);
+insert into produto (id, ativo, descricao, nome, preco, restaurante_id) values (3, true, 'Pizza de Mussarela', 'Pizza', 79.90, 3);
+insert into produto (id, ativo, descricao, nome, preco, restaurante_id) values (4, true, 'Pizza de Marguerita', 'Pizza', 89.90, 1);
+
 insert into forma_pagamento (id, descricao) values (1, 'Cartão de Crédito');
 insert into forma_pagamento (id, descricao) values (2, 'Cartão de Débito');
 insert into forma_pagamento (id, descricao) values (3, 'Dinheiro');
