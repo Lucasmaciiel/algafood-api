@@ -2,6 +2,7 @@ package com.lmg.lmgfood.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -27,6 +28,6 @@ public class Endereco {
 	private String bairro;
 	
 	@JoinColumn(name = "endereco_cidade_id")
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	private Cidade cidade;
 }
