@@ -15,15 +15,13 @@ import com.lmg.lmgfood.domain.repository.EstadoRepository;
 @Service
 public class CadastroEstadoService {
 
+	private static final String MSG_ESTADO_EM_USO = "Estado de código %d não pode ser removido, pois está em uso ";
+	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Não existe um cadastro de estado com o código %d ";
 	@Autowired
 	private EstadoRepository estadoRepository;
 
 	public List<Estado> buscarTodos() {
 		return estadoRepository.findAll();
-	}
-
-	public Estado buscarPorId(Long id) {
-		return estadoRepository.findById(id).get();
 	}
 
 	public Estado adicionar(Estado estado) {
@@ -35,11 +33,17 @@ public class CadastroEstadoService {
 			estadoRepository.deleteById(estadoId);
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe um cadastro de estado com o código %d", estadoId));
+					String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Estado de código %d não pode ser removido, pois está em uso", estadoId));
+					String.format(MSG_ESTADO_EM_USO, estadoId));
 		}
 
+	}
+	
+	public Estado buscarOuFalhar(Long estadoId) {
+		return estadoRepository.findById(estadoId).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(
+						String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
 	}
 }
