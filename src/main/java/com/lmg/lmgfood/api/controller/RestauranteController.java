@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lmg.lmgfood.domain.exception.EntidadeNaoEncontradaException;
 import com.lmg.lmgfood.domain.model.Restaurante;
 import com.lmg.lmgfood.domain.service.CadastroRestauranteService;
 
@@ -30,14 +30,10 @@ public class RestauranteController {
 	private CadastroRestauranteService cadastroRestauranteService;
 
 	@PostMapping
-	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
-		try {
-			return ResponseEntity.ok(cadastroRestauranteService.adicionar(restaurante));
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+			return cadastroRestauranteService.adicionar(restaurante);
 		}
-
-	}
 
 	@PutMapping("/{restauranteId}")
 	public Restaurante atualizar(@RequestBody Restaurante restaurante, @PathVariable Long restauranteId) {

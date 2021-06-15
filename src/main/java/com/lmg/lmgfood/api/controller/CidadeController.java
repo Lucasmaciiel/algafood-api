@@ -26,6 +26,7 @@ public class CidadeController {
 	private CadastroCidadeService cadastroCidadeService;
 
 	@PostMapping
+	@ResponseStatus(value = HttpStatus.CREATED)
 	public Cidade adicionar(@RequestBody Cidade cidade) {
 		return cadastroCidadeService.adicionar(cidade);
 	}
@@ -34,7 +35,7 @@ public class CidadeController {
 	public Cidade atualizar(@RequestBody Cidade cidade, @PathVariable Long cidadeId) {
 		Cidade cidadeEncontrada = cadastroCidadeService.buscarOuFalhar(cidadeId);
 
-		BeanUtils.copyProperties(cidade, cidadeEncontrada, "id"); // ignora a copia do ID
+		BeanUtils.copyProperties(cidade, cidadeEncontrada, "id");
 		return cadastroCidadeService.adicionar(cidadeEncontrada);
 	}
 

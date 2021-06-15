@@ -33,6 +33,7 @@ public class EstadoController {
 	}
 
 	@PostMapping
+	@ResponseStatus(value = HttpStatus.CREATED)
 	public Estado adicionar(@RequestBody Estado estado) {
 		return cadastroEstadoService.adicionar(estado);
 	}
