@@ -33,7 +33,7 @@ public class CidadeController {
 		try {
 			return cadastroCidadeService.adicionar(cidade);
 		} catch (EstadoNaoEncontradoException e) {
-			throw new NegocioException(e.getMessage());
+			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 
@@ -46,7 +46,7 @@ public class CidadeController {
 		try {
 			return cadastroCidadeService.adicionar(cidadeEncontrada);
 		} catch (EstadoNaoEncontradoException e) {
-			throw new NegocioException(e.getMessage());
+			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 

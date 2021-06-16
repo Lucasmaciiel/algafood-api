@@ -37,7 +37,7 @@ public class RestauranteController {
 		try {
 			return cadastroRestauranteService.adicionar(restaurante);			
 		} catch (CozinhaNaoEncontradaException e) {
-			throw new NegocioException(e.getMessage()); 
+			throw new NegocioException(e.getMessage(), e); 
 		}
 		}
 
