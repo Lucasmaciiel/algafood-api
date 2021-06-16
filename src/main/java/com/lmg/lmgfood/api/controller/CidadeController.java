@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lmg.lmgfood.domain.exception.EntidadeNaoEncontradaException;
+import com.lmg.lmgfood.domain.exception.EstadoNaoEncontradoException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.model.Cidade;
 import com.lmg.lmgfood.domain.service.CadastroCidadeService;
@@ -32,7 +32,7 @@ public class CidadeController {
 	public Cidade adicionar(@RequestBody Cidade cidade) {
 		try {
 			return cadastroCidadeService.adicionar(cidade);
-		} catch (EntidadeNaoEncontradaException e) {
+		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}
@@ -45,7 +45,7 @@ public class CidadeController {
 
 		try {
 			return cadastroCidadeService.adicionar(cidadeEncontrada);
-		} catch (EntidadeNaoEncontradaException e) {
+		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage());
 		}
 	}

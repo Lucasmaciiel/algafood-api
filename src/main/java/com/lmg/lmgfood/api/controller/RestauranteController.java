@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lmg.lmgfood.domain.exception.CozinhaNaoEncontradaException;
+import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.model.Restaurante;
 import com.lmg.lmgfood.domain.service.CadastroRestauranteService;
 
@@ -32,7 +34,11 @@ public class RestauranteController {
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public Restaurante adicionar(@RequestBody Restaurante restaurante) {
-			return cadastroRestauranteService.adicionar(restaurante);
+		try {
+			return cadastroRestauranteService.adicionar(restaurante);			
+		} catch (CozinhaNaoEncontradaException e) {
+			throw new NegocioException(e.getMessage()); 
+		}
 		}
 
 	@PutMapping("/{restauranteId}")
