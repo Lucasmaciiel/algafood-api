@@ -1,5 +1,7 @@
 package com.lmg.lmgfood.exceptionhandler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +15,20 @@ import com.lmg.lmgfood.domain.exception.EntidadeEmUsoException;
 import com.lmg.lmgfood.domain.exception.EntidadeNaoEncontradaException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
 
+import java.util.stream.Collectors;
+
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
 																  HttpStatus status, WebRequest request) {
+		Throwable rootCause = ExceptionUtils.getRootCause(ex);
+
+		if (rootCause instanceof InvalidFormatException){
+			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+		}
+
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
 		String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe";
 
@@ -27,12 +37,26 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 
+	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers,
+																HttpStatus status, WebRequest request) {
+		String path = ex.getPath().stream()
+				.map(ref -> ref.getFieldName())
+				.collect(Collectors.joining("."));
+
+		var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+		var detail = String.format("A propriedade '%s' recebeu o valor '%s', que é de um tipo inválido, corrija e informe" +
+				" um valor compatível com o tipo %s. ", path, ex.getValue(), ex.getTargetType().getSimpleName());
+		var problem = createProblemBuilder(status, problemType, detail).build();
+
+		return handleExceptionInternal(ex, problem, headers, status, request);
+	}
+
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> handleTratarEntidadeNaoEncontradaException(EntidadeNaoEncontradaException ex,
 			WebRequest request) {
 		
-		HttpStatus status = HttpStatus.NOT_FOUND;
-		ProblemType problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
+		var status = HttpStatus.NOT_FOUND;
+		var problemType = ProblemType.ENTIDADE_NAO_ENCONTRADA;
 		String detail = ex.getMessage();
 		
 		var problem = createProblemBuilder(status, problemType, detail).build();
@@ -42,11 +66,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<?> handleTratarNegocioException(NegocioException ex, WebRequest request) {
-		HttpStatus status = HttpStatus.BAD_REQUEST;
-		ProblemType problemType = ProblemType.ERRO_NEGOCIO;
+		var status = HttpStatus.BAD_REQUEST;
+		var problemType = ProblemType.ERRO_NEGOCIO;
 		String detail = ex.getMessage();
 		
-		Problem problem = createProblemBuilder(status, problemType, detail).build();
+		var problem = createProblemBuilder(status, problemType, detail).build();
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
