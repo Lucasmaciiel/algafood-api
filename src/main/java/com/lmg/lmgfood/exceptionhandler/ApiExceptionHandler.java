@@ -1,6 +1,8 @@
 package com.lmg.lmgfood.exceptionhandler;
 
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		if (rootCause instanceof InvalidFormatException){
 			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
 		}
+		else if (rootCause instanceof IgnoredPropertyException){
+			return handleIgnoredPropertyException((IgnoredPropertyException) rootCause, headers, status, request);
+		}
+		else if (rootCause instanceof UnrecognizedPropertyException){
+			return handleUnrecognizedPropertyException((UnrecognizedPropertyException) rootCause, headers, status, request);
+		}
 
 		ProblemType problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
 		String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe";
@@ -46,6 +54,34 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
 		var detail = String.format("A propriedade '%s' recebeu o valor '%s', que é de um tipo inválido, corrija e informe" +
 				" um valor compatível com o tipo %s. ", path, ex.getValue(), ex.getTargetType().getSimpleName());
+		var problem = createProblemBuilder(status, problemType, detail).build();
+
+		return handleExceptionInternal(ex, problem, headers, status, request);
+	}
+
+	private ResponseEntity<Object> handleIgnoredPropertyException(IgnoredPropertyException ex, HttpHeaders headers,
+																HttpStatus status, WebRequest request) {
+		String path = ex.getPath().stream()
+				.map(ref -> ref.getFieldName())
+				.collect(Collectors.joining("."));
+
+		var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+		var detail = String.format("A propriedade '%s' não pode ser desserializada, pois está anotada como JsonIgnore, " +
+						"remova está propriedade"
+				, path);
+		var problem = createProblemBuilder(status, problemType, detail).build();
+
+		return handleExceptionInternal(ex, problem, headers, status, request);
+	}
+
+	private ResponseEntity<Object> handleUnrecognizedPropertyException(UnrecognizedPropertyException ex, HttpHeaders headers,
+																  HttpStatus status, WebRequest request) {
+		String path = ex.getPath().stream()
+				.map(ref -> ref.getFieldName())
+				.collect(Collectors.joining("."));
+
+		var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
+		var detail = String.format("A propriedade '%s' não existe, remova está propriedade do corpo da requisição", path);
 		var problem = createProblemBuilder(status, problemType, detail).build();
 
 		return handleExceptionInternal(ex, problem, headers, status, request);
