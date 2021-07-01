@@ -66,8 +66,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				.collect(Collectors.joining("."));
 
 		var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
-		var detail = String.format("A propriedade '%s' não pode ser desserializada, pois está anotada como JsonIgnore, " +
-						"remova está propriedade"
+		var detail = String.format("A propriedade '%s' não existe, corrija ou remova essa propriedade e tente " +
+						"novamente"
 				, path);
 		var problem = createProblemBuilder(status, problemType, detail).build();
 
