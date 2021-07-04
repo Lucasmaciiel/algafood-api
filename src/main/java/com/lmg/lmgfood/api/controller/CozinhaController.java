@@ -19,6 +19,8 @@ import com.lmg.lmgfood.domain.model.Cozinha;
 import com.lmg.lmgfood.domain.repository.CozinhaRepository;
 import com.lmg.lmgfood.domain.service.CadastroCozinhaService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/cozinhas")
 public class CozinhaController {
@@ -36,7 +38,7 @@ public class CozinhaController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody Cozinha cozinha) {
+	public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
 		return cadastroCozinhaService.adicionar(cozinha);
 	}
 
