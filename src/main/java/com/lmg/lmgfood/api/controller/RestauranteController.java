@@ -29,6 +29,7 @@ import com.lmg.lmgfood.domain.model.Restaurante;
 import com.lmg.lmgfood.domain.service.CadastroRestauranteService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
@@ -39,7 +40,7 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+    public Restaurante adicionar(@Valid @RequestBody Restaurante restaurante) {
         try {
             return cadastroRestauranteService.adicionar(restaurante);
         } catch (CozinhaNaoEncontradaException e) {
