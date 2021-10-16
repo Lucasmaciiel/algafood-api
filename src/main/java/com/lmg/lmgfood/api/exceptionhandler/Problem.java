@@ -1,4 +1,4 @@
-package com.lmg.lmgfood.exceptionhandler;
+package com.lmg.lmgfood.api.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

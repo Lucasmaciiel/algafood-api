@@ -1,4 +1,5 @@
-package com.lmg.lmgfood.exceptionhandler;
+package com.lmg.lmgfood.api.exceptionhandler;
+
 
 import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;

@@ -1,4 +1,4 @@
-package com.lmg.lmgfood.exceptionhandler;
+package com.lmg.lmgfood.api.exceptionhandler;
 
 import lombok.Getter;
 
