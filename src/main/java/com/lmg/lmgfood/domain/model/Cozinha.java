@@ -15,14 +15,20 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import com.lmg.lmgfood.Groups;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cozinha {
 
 	@NotNull(groups = Groups.CozinhaId.class)

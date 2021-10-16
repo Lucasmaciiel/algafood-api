@@ -24,6 +24,9 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
 import com.lmg.lmgfood.Groups;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -37,6 +40,9 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Restaurante {
 
 	@EqualsAndHashCode.Include
