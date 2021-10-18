@@ -1,11 +1,13 @@
 package com.lmg.lmgfood.api.controller;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.lmg.lmgfood.Groups;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lmg.lmgfood.api.model.CozinhaDTO;
+import com.lmg.lmgfood.api.model.RestauranteDTO;
+import com.lmg.lmgfood.domain.exception.CozinhaNaoEncontradaException;
+import com.lmg.lmgfood.domain.exception.NegocioException;
+import com.lmg.lmgfood.domain.model.Restaurante;
+import com.lmg.lmgfood.domain.service.CadastroRestauranteService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,14 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lmg.lmgfood.domain.exception.CozinhaNaoEncontradaException;
-import com.lmg.lmgfood.domain.exception.NegocioException;
-import com.lmg.lmgfood.domain.model.Restaurante;
-import com.lmg.lmgfood.domain.service.CadastroRestauranteService;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
@@ -42,35 +41,36 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Restaurante adicionar(@Valid @RequestBody Restaurante restaurante) {
+    public RestauranteDTO adicionar(@Valid @RequestBody Restaurante restaurante) {
         try {
-            return cadastroRestauranteService.adicionar(restaurante);
+            return toDTO(cadastroRestauranteService.adicionar(restaurante));
         } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{restauranteId}")
-    public Restaurante atualizar(@RequestBody Restaurante restaurante, @PathVariable Long restauranteId) {
+    public RestauranteDTO atualizar(@RequestBody Restaurante restaurante, @PathVariable Long restauranteId) {
         Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 
         BeanUtils.copyProperties(restaurante, restauranteEncontrado, "id", "formasPagamento", "endereco",
                 "dataCadastro", "produtos"); // ignora a copia do ID, formasPagamento, endereco
-        return cadastroRestauranteService.adicionar(restauranteEncontrado);
+        return toDTO(cadastroRestauranteService.adicionar(restauranteEncontrado));
     }
 
     @GetMapping
-    public List<Restaurante> buscarTodos() {
-        return cadastroRestauranteService.buscarTodos();
+    public List<RestauranteDTO> buscarTodos() {
+        return toCollectionDTO(cadastroRestauranteService.buscarTodos());
     }
 
+
     @GetMapping("/{restauranteId}")
-    public Restaurante buscarPorId(@PathVariable Long restauranteId) {
-        return cadastroRestauranteService.buscarOuFalhar(restauranteId);
+    public RestauranteDTO buscarPorId(@PathVariable Long restauranteId) {
+        return toDTO(cadastroRestauranteService.buscarOuFalhar(restauranteId));
     }
 
     @PatchMapping("/{restauranteId}")
-    public Restaurante atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos,
+    public RestauranteDTO atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos,
                                         HttpServletRequest request) {
         Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 
@@ -101,5 +101,24 @@ public class RestauranteController {
             Throwable rootCause = ExceptionUtils.getRootCause(e);
             throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
         }
+    }
+
+    private List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes) {
+        return restaurantes.stream()
+                .map(restaurante -> toDTO(restaurante))
+                .collect(Collectors.toList());
+    }
+
+    private RestauranteDTO toDTO(Restaurante restaurante) {
+        CozinhaDTO cozinhaDTO = new CozinhaDTO();
+        cozinhaDTO.setId(restaurante.getCozinha().getId());
+        cozinhaDTO.setNome(restaurante.getCozinha().getNome());
+
+        RestauranteDTO dto = new RestauranteDTO();
+        dto.setId(restaurante.getId());
+        dto.setNome(restaurante.getNome());
+        dto.setTaxaFrete(restaurante.getTaxaFrete());
+        dto.setCozinha(cozinhaDTO);
+        return dto;
     }
 }

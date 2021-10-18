@@ -1,6 +1,7 @@
 package com.lmg.lmgfood.api.exceptionhandler;
 
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
@@ -19,6 +20,8 @@ import com.lmg.lmgfood.domain.exception.EntidadeNaoEncontradaException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
 
 import java.util.stream.Collectors;
+
+import static com.fasterxml.jackson.databind.JsonMappingException.*;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -49,7 +52,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers,
 																HttpStatus status, WebRequest request) {
 		String path = ex.getPath().stream()
-				.map(ref -> ref.getFieldName())
+				.map(Reference::getFieldName)
 				.collect(Collectors.joining("."));
 
 		var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;
@@ -78,7 +81,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	private ResponseEntity<Object> handleUnrecognizedPropertyException(UnrecognizedPropertyException ex, HttpHeaders headers,
 																  HttpStatus status, WebRequest request) {
 		String path = ex.getPath().stream()
-				.map(ref -> ref.getFieldName())
+				.map(Reference::getFieldName)
 				.collect(Collectors.joining("."));
 
 		var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;

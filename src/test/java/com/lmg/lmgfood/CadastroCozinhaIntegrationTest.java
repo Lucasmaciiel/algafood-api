@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.swing.*;
-import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -22,7 +20,7 @@ class CadastroCozinhaIntegrationTest {
 		private CadastroCozinhaService service;
 
 		@Test
-		public void testarCadastroCozinhaComSucesso(){
+		void testarCadastroCozinhaComSucesso(){
 			//cenário
 			var cozinha =
 					Cozinha.builder()
