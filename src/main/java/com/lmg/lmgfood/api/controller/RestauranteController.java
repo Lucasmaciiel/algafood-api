@@ -2,8 +2,9 @@ package com.lmg.lmgfood.api.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lmg.lmgfood.api.model.CozinhaDTO;
+import com.lmg.lmgfood.api.mapper.RestauranteMapper;
 import com.lmg.lmgfood.api.model.RestauranteDTO;
+import com.lmg.lmgfood.api.model.form.RestauranteForm;
 import com.lmg.lmgfood.domain.exception.CozinhaNaoEncontradaException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.model.Restaurante;
@@ -30,7 +31,6 @@ import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/restaurantes")
@@ -39,11 +39,16 @@ public class RestauranteController {
     @Autowired
     private CadastroRestauranteService cadastroRestauranteService;
 
+    @Autowired
+    private RestauranteMapper mapper;
+
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public RestauranteDTO adicionar(@Valid @RequestBody Restaurante restaurante) {
+    public RestauranteDTO adicionar(@Valid @RequestBody RestauranteForm restauranteForm) {
         try {
-            return toDTO(cadastroRestauranteService.adicionar(restaurante));
+            Restaurante restaurante = mapper.toDomain(restauranteForm);
+
+            return mapper.toDTO(cadastroRestauranteService.adicionar(restaurante));
         } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
@@ -55,18 +60,18 @@ public class RestauranteController {
 
         BeanUtils.copyProperties(restaurante, restauranteEncontrado, "id", "formasPagamento", "endereco",
                 "dataCadastro", "produtos"); // ignora a copia do ID, formasPagamento, endereco
-        return toDTO(cadastroRestauranteService.adicionar(restauranteEncontrado));
+        return mapper.toDTO(cadastroRestauranteService.adicionar(restauranteEncontrado));
     }
 
     @GetMapping
     public List<RestauranteDTO> buscarTodos() {
-        return toCollectionDTO(cadastroRestauranteService.buscarTodos());
+        return mapper.toCollectionDTO(cadastroRestauranteService.buscarTodos());
     }
 
 
     @GetMapping("/{restauranteId}")
     public RestauranteDTO buscarPorId(@PathVariable Long restauranteId) {
-        return toDTO(cadastroRestauranteService.buscarOuFalhar(restauranteId));
+        return mapper.toDTO(cadastroRestauranteService.buscarOuFalhar(restauranteId));
     }
 
     @PatchMapping("/{restauranteId}")
@@ -103,22 +108,5 @@ public class RestauranteController {
         }
     }
 
-    private List<RestauranteDTO> toCollectionDTO(List<Restaurante> restaurantes) {
-        return restaurantes.stream()
-                .map(restaurante -> toDTO(restaurante))
-                .collect(Collectors.toList());
-    }
 
-    private RestauranteDTO toDTO(Restaurante restaurante) {
-        CozinhaDTO cozinhaDTO = new CozinhaDTO();
-        cozinhaDTO.setId(restaurante.getCozinha().getId());
-        cozinhaDTO.setNome(restaurante.getCozinha().getNome());
-
-        RestauranteDTO dto = new RestauranteDTO();
-        dto.setId(restaurante.getId());
-        dto.setNome(restaurante.getNome());
-        dto.setTaxaFrete(restaurante.getTaxaFrete());
-        dto.setCozinha(cozinhaDTO);
-        return dto;
-    }
 }

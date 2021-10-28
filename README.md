@@ -5,3 +5,9 @@ Com o docker instalado e rodando na máquina, execute o comando para criar a ima
 
 Para verificar se foi instalado corretamente e está rodando 
 - docker ps
+
+Verificar container parados
+- docker ps -a 
+
+Rodar o container 
+- docker start container_id

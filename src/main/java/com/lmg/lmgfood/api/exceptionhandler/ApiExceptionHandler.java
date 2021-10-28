@@ -1,10 +1,12 @@
 package com.lmg.lmgfood.api.exceptionhandler;
 
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.lmg.lmgfood.domain.exception.EntidadeEmUsoException;
+import com.lmg.lmgfood.domain.exception.EntidadeNaoEncontradaException;
+import com.lmg.lmgfood.domain.exception.NegocioException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,13 +17,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.lmg.lmgfood.domain.exception.EntidadeEmUsoException;
-import com.lmg.lmgfood.domain.exception.EntidadeNaoEncontradaException;
-import com.lmg.lmgfood.domain.exception.NegocioException;
-
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.databind.JsonMappingException.*;
+import static com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.lmg.lmgfood.api.model.mixin.CidadeMixin;
-import com.lmg.lmgfood.api.model.mixin.RestauranteMixin;
 import com.lmg.lmgfood.domain.model.Cidade;
 import com.lmg.lmgfood.domain.model.Restaurante;
 
@@ -14,7 +13,6 @@ public class JacksonMixinModule extends SimpleModule {
 	private static final long serialVersionUID = 1L;
 
 	public JacksonMixinModule() {
-		setMixInAnnotation(Restaurante.class, RestauranteMixin.class);
 		setMixInAnnotation(Cidade.class, CidadeMixin.class);
 	}
 }
