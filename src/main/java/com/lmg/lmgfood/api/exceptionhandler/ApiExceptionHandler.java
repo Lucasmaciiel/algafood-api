@@ -64,7 +64,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	private ResponseEntity<Object> handleIgnoredPropertyException(IgnoredPropertyException ex, HttpHeaders headers,
 																HttpStatus status, WebRequest request) {
 		String path = ex.getPath().stream()
-				.map(ref -> ref.getFieldName())
+				.map(Reference::getFieldName)
 				.collect(Collectors.joining("."));
 
 		var problemType = ProblemType.MENSAGEM_INCOMPREENSIVEL;

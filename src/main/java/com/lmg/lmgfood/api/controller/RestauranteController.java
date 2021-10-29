@@ -10,7 +10,6 @@ import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.model.Restaurante;
 import com.lmg.lmgfood.domain.service.CadastroRestauranteService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -46,7 +45,7 @@ public class RestauranteController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public RestauranteDTO adicionar(@Valid @RequestBody RestauranteForm restauranteForm) {
         try {
-            Restaurante restaurante = mapper.toDomain(restauranteForm);
+            Restaurante restaurante = mapper.toDomainObject(restauranteForm);
 
             return mapper.toDTO(cadastroRestauranteService.adicionar(restaurante));
         } catch (CozinhaNaoEncontradaException e) {
@@ -55,12 +54,23 @@ public class RestauranteController {
     }
 
     @PutMapping("/{restauranteId}")
-    public RestauranteDTO atualizar(@RequestBody Restaurante restaurante, @PathVariable Long restauranteId) {
-        Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+    public RestauranteDTO atualizar(@RequestBody RestauranteForm restauranteForm, @PathVariable Long restauranteId) {
+        try {
+//            Restaurante restaurante = mapper.toDomainObject(restauranteForm);
 
-        BeanUtils.copyProperties(restaurante, restauranteEncontrado, "id", "formasPagamento", "endereco",
-                "dataCadastro", "produtos"); // ignora a copia do ID, formasPagamento, endereco
-        return mapper.toDTO(cadastroRestauranteService.adicionar(restauranteEncontrado));
+            Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+
+            mapper.copyToDomainObject(restauranteForm, restauranteEncontrado);
+
+//            BeanUtils.copyProperties(restauranteForm, restauranteEncontrado, "id", "formasPagamento", "endereco",
+//                    "dataCadastro", "produtos"); // ignora a copia do ID, formasPagamento, endereco
+
+            return mapper.toDTO(cadastroRestauranteService.adicionar(restauranteEncontrado));
+
+        } catch (CozinhaNaoEncontradaException e){
+            throw new NegocioException(e.getMessage());
+        }
+
     }
 
     @GetMapping
@@ -74,15 +84,15 @@ public class RestauranteController {
         return mapper.toDTO(cadastroRestauranteService.buscarOuFalhar(restauranteId));
     }
 
-    @PatchMapping("/{restauranteId}")
-    public RestauranteDTO atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos,
-                                        HttpServletRequest request) {
-        Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
-
-        merge(campos, restauranteEncontrado, request);
-
-        return atualizar(restauranteEncontrado, restauranteId);
-    }
+//    @PatchMapping("/{restauranteId}")
+//    public RestauranteDTO atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos,
+//                                        HttpServletRequest request) {
+//        Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+//
+//        merge(campos, restauranteEncontrado, request);
+//
+//        return atualizar(restauranteEncontrado, restauranteId);
+//    }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
         ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);
