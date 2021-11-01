@@ -56,14 +56,10 @@ public class RestauranteController {
     @PutMapping("/{restauranteId}")
     public RestauranteDTO atualizar(@RequestBody RestauranteForm restauranteForm, @PathVariable Long restauranteId) {
         try {
-//            Restaurante restaurante = mapper.toDomainObject(restauranteForm);
 
             Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 
             mapper.copyToDomainObject(restauranteForm, restauranteEncontrado);
-
-//            BeanUtils.copyProperties(restauranteForm, restauranteEncontrado, "id", "formasPagamento", "endereco",
-//                    "dataCadastro", "produtos"); // ignora a copia do ID, formasPagamento, endereco
 
             return mapper.toDTO(cadastroRestauranteService.adicionar(restauranteEncontrado));
 

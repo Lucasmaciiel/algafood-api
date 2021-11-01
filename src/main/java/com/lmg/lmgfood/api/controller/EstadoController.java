@@ -2,6 +2,9 @@ package com.lmg.lmgfood.api.controller;
 
 import java.util.List;
 
+import com.lmg.lmgfood.api.mapper.EstadoMapper;
+import com.lmg.lmgfood.api.model.EstadoDTO;
+import com.lmg.lmgfood.api.model.form.EstadoForm;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,9 @@ public class EstadoController {
 	@Autowired
 	private CadastroEstadoService cadastroEstadoService;
 
+	@Autowired
+	private EstadoMapper mapper;
+
 	@GetMapping
 	public List<Estado> buscarTodas() {
 		return estadoRepository.findAll();
@@ -36,18 +42,19 @@ public class EstadoController {
 
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Estado adicionar(@RequestBody Estado estado) {
-		return cadastroEstadoService.adicionar(estado);
+	public EstadoDTO adicionar(@RequestBody EstadoForm estadoForm) {
+		var estado = mapper.toDomainObject(estadoForm);
+		return mapper.toDTO(cadastroEstadoService.adicionar(estado));
 	}
 	
 	@PutMapping(value = "/{estadoId}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Estado atualizar(@RequestBody Estado estado, @PathVariable Long estadoId) {
+	public EstadoDTO atualizar(@RequestBody EstadoForm estadoForm, @PathVariable Long estadoId) {
 		
 		Estado estadoEncontrado = cadastroEstadoService.buscarOuFalhar(estadoId);
+		mapper.copyToDomainObject(estadoForm, estadoEncontrado);
 
-		BeanUtils.copyProperties(estado, estadoEncontrado, "id");
-		return cadastroEstadoService.adicionar(estadoEncontrado);
+		return mapper.toDTO(cadastroEstadoService.adicionar(estadoEncontrado));
 	}
 	
 	

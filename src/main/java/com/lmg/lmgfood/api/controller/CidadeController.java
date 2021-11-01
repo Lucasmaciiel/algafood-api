@@ -1,7 +1,12 @@
 package com.lmg.lmgfood.api.controller;
 
-import java.util.List;
-
+import com.lmg.lmgfood.api.mapper.CidadeMapper;
+import com.lmg.lmgfood.api.model.CidadeDTO;
+import com.lmg.lmgfood.api.model.form.CidadeForm;
+import com.lmg.lmgfood.domain.exception.EstadoNaoEncontradoException;
+import com.lmg.lmgfood.domain.exception.NegocioException;
+import com.lmg.lmgfood.domain.model.Cidade;
+import com.lmg.lmgfood.domain.service.CadastroCidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,10 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lmg.lmgfood.domain.exception.EstadoNaoEncontradoException;
-import com.lmg.lmgfood.domain.exception.NegocioException;
-import com.lmg.lmgfood.domain.model.Cidade;
-import com.lmg.lmgfood.domain.service.CadastroCidadeService;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cidades")
@@ -27,37 +29,42 @@ public class CidadeController {
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;
 
+	@Autowired
+	private CidadeMapper mapper;
+
 	@PostMapping
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Cidade adicionar(@RequestBody Cidade cidade) {
+	public CidadeDTO adicionar(@RequestBody CidadeForm cidadeForm) {
 		try {
-			return cadastroCidadeService.adicionar(cidade);
+			var cidade = mapper.toDomainObject(cidadeForm);
+			return mapper.toDTO(cadastroCidadeService.adicionar(cidade));
+
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 
 	@PutMapping("/{cidadeId}")
-	public Cidade atualizar(@RequestBody Cidade cidade, @PathVariable Long cidadeId) {
+	public CidadeDTO atualizar(@RequestBody CidadeForm cidadeForm, @PathVariable Long cidadeId) {
 		Cidade cidadeEncontrada = cadastroCidadeService.buscarOuFalhar(cidadeId);
 
-		BeanUtils.copyProperties(cidade, cidadeEncontrada, "id");
-
+		mapper.copyToDomainObject(cidadeForm, cidadeEncontrada);
 		try {
-			return cadastroCidadeService.adicionar(cidadeEncontrada);
+			return mapper.toDTO(cadastroCidadeService.adicionar(cidadeEncontrada));
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
 	}
 
 	@GetMapping
+	//TODO: Verificar
 	public List<Cidade> buscarTodas() {
 		return cadastroCidadeService.buscarTodas();
 	}
 
 	@GetMapping("/{cidadeId}")
-	public Cidade buscarPorId(@PathVariable Long cidadeId) {
-		return cadastroCidadeService.buscarOuFalhar(cidadeId);
+	public CidadeDTO buscarPorId(@PathVariable Long cidadeId) {
+		return mapper.toDTO(cadastroCidadeService.buscarOuFalhar(cidadeId));
 	}
 
 	@DeleteMapping("/{cidadeId}")

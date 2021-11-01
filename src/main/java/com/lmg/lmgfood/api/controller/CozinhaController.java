@@ -2,6 +2,9 @@ package com.lmg.lmgfood.api.controller;
 
 import java.util.List;
 
+import com.lmg.lmgfood.api.mapper.CozinhaMapper;
+import com.lmg.lmgfood.api.model.CozinhaDTO;
+import com.lmg.lmgfood.api.model.form.CozinhaForm;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,9 @@ public class CozinhaController {
 	private CozinhaRepository cozinhaRepository;
 
 	@Autowired
+	private CozinhaMapper mapper;
+
+	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 
 	@GetMapping("/por-nome")
@@ -38,16 +44,17 @@ public class CozinhaController {
 
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
-		return cadastroCozinhaService.adicionar(cozinha);
+	public CozinhaDTO adicionar(@RequestBody @Valid CozinhaForm cozinhaForm) {
+		var cozinha = mapper.toDomainObject(cozinhaForm);
+		return mapper.toDTO(cadastroCozinhaService.adicionar(cozinha));
 	}
 
 	@PutMapping("/{cozinhaId}")
-	public Cozinha atualizar(@RequestBody Cozinha cozinha, @PathVariable Long cozinhaId) {
+	public CozinhaDTO atualizar(@RequestBody CozinhaForm cozinhaForm, @PathVariable Long cozinhaId) {
 		Cozinha cozinhaEncontrada = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+		mapper.copyToDomainObject(cozinhaForm, cozinhaEncontrada);
 
-		BeanUtils.copyProperties(cozinha, cozinhaEncontrada, "id"); // ignora a copia do ID
-		return cadastroCozinhaService.adicionar(cozinhaEncontrada);
+		return mapper.toDTO(cadastroCozinhaService.adicionar(cozinhaEncontrada));
 
 	}
 
@@ -57,8 +64,8 @@ public class CozinhaController {
 	}
 
 	@GetMapping("/{cozinhaId}")
-	public Cozinha buscarPorId(@PathVariable Long cozinhaId) {
-		return cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+	public CozinhaDTO buscarPorId(@PathVariable Long cozinhaId) {
+		return mapper.toDTO(cadastroCozinhaService.buscarOuFalhar(cozinhaId));
 	}
 
 	@DeleteMapping("/{cozinhaId}")
