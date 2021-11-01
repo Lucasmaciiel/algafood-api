@@ -1,11 +1,11 @@
 package com.lmg.lmgfood.api.controller;
 
-import java.util.List;
-
 import com.lmg.lmgfood.api.mapper.CozinhaMapper;
 import com.lmg.lmgfood.api.model.CozinhaDTO;
 import com.lmg.lmgfood.api.model.form.CozinhaForm;
-import org.springframework.beans.BeanUtils;
+import com.lmg.lmgfood.domain.model.Cozinha;
+import com.lmg.lmgfood.domain.repository.CozinhaRepository;
+import com.lmg.lmgfood.domain.service.CadastroCozinhaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,11 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lmg.lmgfood.domain.model.Cozinha;
-import com.lmg.lmgfood.domain.repository.CozinhaRepository;
-import com.lmg.lmgfood.domain.service.CadastroCozinhaService;
-
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cozinhas")

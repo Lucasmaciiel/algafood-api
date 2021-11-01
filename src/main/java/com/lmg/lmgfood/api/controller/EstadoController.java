@@ -1,11 +1,11 @@
 package com.lmg.lmgfood.api.controller;
 
-import java.util.List;
-
 import com.lmg.lmgfood.api.mapper.EstadoMapper;
 import com.lmg.lmgfood.api.model.EstadoDTO;
 import com.lmg.lmgfood.api.model.form.EstadoForm;
-import org.springframework.beans.BeanUtils;
+import com.lmg.lmgfood.domain.model.Estado;
+import com.lmg.lmgfood.domain.repository.EstadoRepository;
+import com.lmg.lmgfood.domain.service.CadastroEstadoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lmg.lmgfood.domain.model.Estado;
-import com.lmg.lmgfood.domain.repository.EstadoRepository;
-import com.lmg.lmgfood.domain.service.CadastroEstadoService;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/estados")

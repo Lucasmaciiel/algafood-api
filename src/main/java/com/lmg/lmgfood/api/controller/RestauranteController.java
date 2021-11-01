@@ -16,7 +16,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -79,16 +78,6 @@ public class RestauranteController {
     public RestauranteDTO buscarPorId(@PathVariable Long restauranteId) {
         return mapper.toDTO(cadastroRestauranteService.buscarOuFalhar(restauranteId));
     }
-
-//    @PatchMapping("/{restauranteId}")
-//    public RestauranteDTO atualizarParcial(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos,
-//                                        HttpServletRequest request) {
-//        Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
-//
-//        merge(campos, restauranteEncontrado, request);
-//
-//        return atualizar(restauranteEncontrado, restauranteId);
-//    }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
         ServletServerHttpRequest serverHttpRequest = new ServletServerHttpRequest(request);

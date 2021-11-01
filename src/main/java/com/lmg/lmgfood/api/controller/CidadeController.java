@@ -7,7 +7,6 @@ import com.lmg.lmgfood.domain.exception.EstadoNaoEncontradoException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.model.Cidade;
 import com.lmg.lmgfood.domain.service.CadastroCidadeService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,7 +56,6 @@ public class CidadeController {
 	}
 
 	@GetMapping
-	//TODO: Verificar
 	public List<Cidade> buscarTodas() {
 		return cadastroCidadeService.buscarTodas();
 	}
