@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,6 +78,20 @@ public class RestauranteController {
     @GetMapping("/{restauranteId}")
     public RestauranteDTO buscarPorId(@PathVariable Long restauranteId) {
         return mapper.toDTO(cadastroRestauranteService.buscarOuFalhar(restauranteId));
+    }
+
+
+    // utilizando o PUT, pois é idempotente, não causará efeitos colaterais se fizer várias chamadas repetidas
+    @PutMapping("/{restauranteId}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long restauranteId){
+        cadastroRestauranteService.ativar(restauranteId);
+    }
+
+    @DeleteMapping("/{restauranteId}/inativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativar(@PathVariable Long restauranteId){
+        cadastroRestauranteService.inativar(restauranteId);
     }
 
     private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino, HttpServletRequest request) {
