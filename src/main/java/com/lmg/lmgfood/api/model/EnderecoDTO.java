@@ -9,14 +9,9 @@ import javax.persistence.Embeddable;
 public class EnderecoDTO {
 
 	private String cep;
-
 	private String logadouro;
-
 	private String numero;
-
 	private String complemente;
-	
 	private String bairro;
-	
 	private CidadeResumoDTO cidade;
 }

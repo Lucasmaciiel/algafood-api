@@ -24,4 +24,8 @@ public class RestauranteForm {
     @NotNull
     private CozinhaIdForm cozinha;
 
+    @Valid
+    @NotNull
+    private EnderecoForm endereco;
+
 }

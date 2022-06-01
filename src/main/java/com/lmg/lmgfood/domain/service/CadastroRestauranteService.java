@@ -2,6 +2,7 @@ package com.lmg.lmgfood.domain.service;
 
 import java.util.List;
 
+import com.lmg.lmgfood.domain.model.Cidade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,9 @@ public class CadastroRestauranteService {
 	@Autowired
 	private CadastroCozinhaService cadastroCozinhaService;
 
+	@Autowired
+	private CadastroCidadeService cadastroCidadeService;
+
 	public List<Restaurante> buscarTodos() {
 		return restauranteRepository.findAll();
 	}
@@ -27,10 +31,13 @@ public class CadastroRestauranteService {
 	@Transactional
 	public Restaurante adicionar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
+		Long cidadeId = restaurante.getEndereco().getCidade().getId();
 		
 		Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
+		Cidade cidade = cadastroCidadeService.buscarOuFalhar(cidadeId);
 
 		restaurante.setCozinha(cozinha);
+		restaurante.getEndereco().setCidade(cidade);
 
 		return restauranteRepository.save(restaurante);
 	}

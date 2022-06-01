@@ -2,6 +2,7 @@ package com.lmg.lmgfood.api.mapper;
 
 import com.lmg.lmgfood.api.model.RestauranteDTO;
 import com.lmg.lmgfood.api.model.form.RestauranteForm;
+import com.lmg.lmgfood.domain.model.Cidade;
 import com.lmg.lmgfood.domain.model.Cozinha;
 import com.lmg.lmgfood.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
@@ -42,6 +43,11 @@ public class RestauranteMapper {
         //"identifier of an instance of com.lmg.lmgfood.domain.model.Restaurante was altered from 1 to 2;
         // nested exception is org.hibernate.HibernateException: identifier of an instance of com.lmg.lmgfood.domain.model.Restaurante was altered from 1 to 2",
         restaurante.setCozinha(new Cozinha());
+
+        if (restaurante.getEndereco() != null){
+            restaurante.getEndereco().setCidade(new Cidade());
+        }
+
         modelMapper.map(restauranteForm, restaurante);
     }
 

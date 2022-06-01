@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lmg.lmgfood.api.mapper.RestauranteMapper;
 import com.lmg.lmgfood.api.model.RestauranteDTO;
 import com.lmg.lmgfood.api.model.form.RestauranteForm;
+import com.lmg.lmgfood.domain.exception.CidadeNaoEncontradaException;
 import com.lmg.lmgfood.domain.exception.CozinhaNaoEncontradaException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.model.Restaurante;
@@ -48,13 +49,13 @@ public class RestauranteController {
             Restaurante restaurante = mapper.toDomainObject(restauranteForm);
 
             return mapper.toDTO(cadastroRestauranteService.adicionar(restaurante));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
 
     @PutMapping("/{restauranteId}")
-    public RestauranteDTO atualizar(@RequestBody RestauranteForm restauranteForm, @PathVariable Long restauranteId) {
+    public RestauranteDTO atualizar(@RequestBody @Valid RestauranteForm restauranteForm, @PathVariable Long restauranteId) {
         try {
 
             Restaurante restauranteEncontrado = cadastroRestauranteService.buscarOuFalhar(restauranteId);
@@ -63,7 +64,7 @@ public class RestauranteController {
 
             return mapper.toDTO(cadastroRestauranteService.adicionar(restauranteEncontrado));
 
-        } catch (CozinhaNaoEncontradaException e){
+        } catch (CozinhaNaoEncontradaException  | CidadeNaoEncontradaException e){
             throw new NegocioException(e.getMessage());
         }
 
