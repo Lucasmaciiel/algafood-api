@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CadastroUsuarioService {
@@ -27,6 +28,12 @@ public class CadastroUsuarioService {
 
     @Transactional
     public Usuario adicionar(Usuario usuario) {
+        usuarioRepository.detach(usuario);
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+
+        if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)){
+            throw new NegocioException(String.format("Já existe um usuário com o e-mail %s", usuario.getEmail()));
+        }
         return usuarioRepository.save(usuario);
     }
 
