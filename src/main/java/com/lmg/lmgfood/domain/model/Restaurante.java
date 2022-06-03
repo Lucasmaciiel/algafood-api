@@ -20,12 +20,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -68,7 +68,7 @@ public class Restaurante {
 	@JoinTable(name = "restaurante_forma_pagamento",
 			joinColumns = @JoinColumn(name = "restaurante_id"),
 			inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-	private List<FormaPagamento> formasPagamento = new ArrayList<>();
+	private Set<FormaPagamento> formasPagamento = new HashSet<>(); //Set para não aceitar elementos duplicados
 	
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos = new ArrayList<>();
@@ -81,6 +81,13 @@ public class Restaurante {
         setAtivo(false);
     }
 
+	public boolean removerFormaPagamento(FormaPagamento formaPagamento){
+		return getFormasPagamento().remove(formaPagamento);
+	}
+
+	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento){
+		return getFormasPagamento().add(formaPagamento);
+	}
 }
 
 

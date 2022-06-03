@@ -3,6 +3,7 @@ package com.lmg.lmgfood.domain.service;
 import java.util.List;
 
 import com.lmg.lmgfood.domain.model.Cidade;
+import com.lmg.lmgfood.domain.model.FormaPagamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,9 @@ public class CadastroRestauranteService {
 
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;
+
+	@Autowired
+	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
 
 	public List<Restaurante> buscarTodos() {
 		return restauranteRepository.findAll();
@@ -60,5 +64,28 @@ public class CadastroRestauranteService {
 	public Restaurante buscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId).orElseThrow(
 				() -> new RestauranteNaoEncontradoException(restauranteId));
+	}
+
+	/**
+	 * Desassociar forma de pagamento com o restaurante
+	 * @param restauranteId
+	 * @param formaPagamentoId forma de pagamento que deseja remover
+	 */
+	@Transactional
+	public void desassociarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+
+		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+		restaurante.removerFormaPagamento(formaPagamento);
+	}
+
+	@Transactional
+	public void associarFormaPagamento(Long restauranteId, Long formaPagamentoId){
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+
+		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+
+		restaurante.adicionarFormaPagamento(formaPagamento);
 	}
 }
