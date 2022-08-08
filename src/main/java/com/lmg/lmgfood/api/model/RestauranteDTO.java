@@ -20,4 +20,6 @@ public class RestauranteDTO {
     private Boolean ativo;
 
     private EnderecoDTO endereco;
+
+    private Boolean aberto;
 }

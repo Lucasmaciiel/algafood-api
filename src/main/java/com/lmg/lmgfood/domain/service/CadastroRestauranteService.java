@@ -88,4 +88,24 @@ public class CadastroRestauranteService {
 
 		restaurante.adicionarFormaPagamento(formaPagamento);
 	}
+
+	/**
+	 * Abre um restaurante, indicando que o restaurante se encontra aberto
+	 * @param restauranteId
+	 */
+	@Transactional
+	public void abrir(Long restauranteId) {
+		var restaurante = this.buscarOuFalhar(restauranteId);
+		restaurante.abrirRestaurante();
+	}
+
+	/**
+	 * Fecha um restaurante, indicando que o restaurante se encontra fechado
+	 * @param restauranteId
+	 */
+	@Transactional
+	public void fechar(Long restauranteId) {
+		var restaurante = this.buscarOuFalhar(restauranteId);
+		restaurante.fecharRestaurante();
+	}
 }

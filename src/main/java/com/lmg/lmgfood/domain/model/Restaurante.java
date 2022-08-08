@@ -55,6 +55,8 @@ public class Restaurante {
 	private Endereco endereco;
 
     private Boolean ativo = Boolean.TRUE;
+
+	private Boolean aberto = Boolean.TRUE;
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
@@ -80,6 +82,14 @@ public class Restaurante {
     public void inativar(){
         setAtivo(false);
     }
+
+	public void abrirRestaurante(){
+		setAberto(true);
+	}
+
+	public void fecharRestaurante(){
+		setAberto(false);
+	}
 
 	public boolean removerFormaPagamento(FormaPagamento formaPagamento){
 		return getFormasPagamento().remove(formaPagamento);
