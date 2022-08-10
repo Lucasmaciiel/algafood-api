@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.lmg.lmgfood.domain.model.Cidade;
 import com.lmg.lmgfood.domain.model.FormaPagamento;
+import com.lmg.lmgfood.domain.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,9 @@ public class CadastroRestauranteService {
 
 	@Autowired
 	private CadastroCidadeService cadastroCidadeService;
+
+	@Autowired
+	private CadastroUsuarioService cadastroUsuarioService;
 
 	@Autowired
 	private CadastroFormaPagamentoService cadastroFormaPagamentoService;
@@ -87,6 +91,21 @@ public class CadastroRestauranteService {
 		FormaPagamento formaPagamento = cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
 
 		restaurante.adicionarFormaPagamento(formaPagamento);
+	}
+
+	@Transactional
+	public void desassociarResponsavel(Long restauranteId, Long usuarioId){
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario responsavel = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+
+		restaurante.removerResponsavel(responsavel);
+	}
+
+	@Transactional
+	public void associarResponsavel(Long restauranteId, Long usuarioId){
+		Restaurante restaurante = buscarOuFalhar(restauranteId);
+		Usuario responsavel = cadastroUsuarioService.buscarOuFalhar(usuarioId);
+		restaurante.adicionarResponsavel(responsavel);
 	}
 
 	/**
