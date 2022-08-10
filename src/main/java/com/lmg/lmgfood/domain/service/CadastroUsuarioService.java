@@ -3,6 +3,7 @@ package com.lmg.lmgfood.domain.service;
 import com.lmg.lmgfood.domain.exception.EntidadeEmUsoException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.exception.UsuarioNaoEncontradoException;
+import com.lmg.lmgfood.domain.model.Grupo;
 import com.lmg.lmgfood.domain.model.Usuario;
 import com.lmg.lmgfood.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class CadastroUsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CadastroGrupoService cadastroGrupoService;
 
     public List<Usuario> buscarTodas() {
         return usuarioRepository.findAll();
@@ -63,5 +67,19 @@ public class CadastroUsuarioService {
         }
 
         usuario.setSenha(novaSenha);
+    }
+
+    @Transactional
+    public void desassociarGrupo(Long usuarioId, Long grupoId){
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupoService.buscarOuFalhar(grupoId);
+
+        usuario.removerGrupo(grupo);
+    }
+    @Transactional
+    public void associarGrupo(Long usuarioId, Long grupoId){
+        Usuario usuario = buscarOuFalhar(usuarioId);
+        Grupo grupo = cadastroGrupoService.buscarOuFalhar(grupoId);
+        usuario.adicionarGrupo(grupo);
     }
 }
