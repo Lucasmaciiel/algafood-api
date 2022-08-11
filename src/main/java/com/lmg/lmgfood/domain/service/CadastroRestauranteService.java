@@ -62,8 +62,17 @@ public class CadastroRestauranteService {
     public void inativar(Long restauranteId){
         Restaurante restaurante = this.buscarOuFalhar(restauranteId);
         restaurante.inativar();
-        //não é preciso chamar o save, pois o jpa ja reconhece que estamos em uma transação do banco de dados
     }
+
+	@Transactional
+	public void ativar(List<Long> restauranteId){
+		restauranteId.forEach(this::ativar);
+	}
+
+	@Transactional
+	public void inativar(List<Long> restauranteId){
+		restauranteId.forEach(this::inativar);
+	}
 
 	public Restaurante buscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId).orElseThrow(

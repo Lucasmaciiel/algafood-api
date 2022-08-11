@@ -7,6 +7,7 @@ import com.lmg.lmgfood.api.model.RestauranteDTO;
 import com.lmg.lmgfood.api.model.form.RestauranteForm;
 import com.lmg.lmgfood.domain.exception.CidadeNaoEncontradaException;
 import com.lmg.lmgfood.domain.exception.CozinhaNaoEncontradaException;
+import com.lmg.lmgfood.domain.exception.EntidadeNaoEncontradaException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.model.Restaurante;
 import com.lmg.lmgfood.domain.service.CadastroRestauranteService;
@@ -93,6 +94,26 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void inativar(@PathVariable Long restauranteId){
         cadastroRestauranteService.inativar(restauranteId);
+    }
+
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos(@RequestBody List<Long> restauranteId){
+        try {
+            cadastroRestauranteService.ativar(restauranteId);
+        } catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos(@RequestBody List<Long> restauranteIds){
+        try {
+            cadastroRestauranteService.inativar(restauranteIds);
+        } catch (EntidadeNaoEncontradaException e){
+            throw new NegocioException(e.getMessage(), e);
+        }
     }
 
     @PutMapping("/{restauranteId}/abertura")
