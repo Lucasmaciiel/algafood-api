@@ -1,7 +1,9 @@
 package com.lmg.lmgfood.api.controller;
 
 import com.lmg.lmgfood.api.mapper.PedidoMapper;
+import com.lmg.lmgfood.api.mapper.PedidoResumoMapper;
 import com.lmg.lmgfood.api.model.PedidoDTO;
+import com.lmg.lmgfood.api.model.PedidoResumoDTO;
 import com.lmg.lmgfood.domain.model.Pedido;
 import com.lmg.lmgfood.domain.repository.PedidoRepository;
 import com.lmg.lmgfood.domain.service.EmissaoPedidoService;
@@ -27,11 +29,14 @@ public class PedidoController {
     @Autowired
     private PedidoMapper pedidoMapper;
 
+    @Autowired
+    private PedidoResumoMapper pedidoResumoMapper;
+
 
     @GetMapping
-    public List<PedidoDTO> listar(){
+    public List<PedidoResumoDTO> listar(){
         List<Pedido> pedidos = pedidoRepository.findAll();
-        return pedidoMapper.toCollectionModel(pedidos);
+        return pedidoResumoMapper.toCollectionModel(pedidos);
     }
 
     @GetMapping(value = "/{pedidoId}")
