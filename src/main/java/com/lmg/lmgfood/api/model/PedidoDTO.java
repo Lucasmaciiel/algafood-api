@@ -1,6 +1,6 @@
 package com.lmg.lmgfood.api.model;
 
-import com.lmg.lmgfood.domain.model.StatusPedido;
+import com.lmg.lmgfood.domain.model.enums.StatusPedido;
 import lombok.Getter;
 import lombok.Setter;
 

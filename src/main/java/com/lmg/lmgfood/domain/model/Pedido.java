@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.lmg.lmgfood.domain.exception.NegocioException;
+import com.lmg.lmgfood.domain.model.enums.StatusPedido;
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
@@ -77,6 +79,30 @@ public class Pedido {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 		this.valorTotal = this.subtotal.add(this.taxaFrete);
+	}
+
+	public void confirmar(){
+		setStatus(StatusPedido.CONFIRMADO);
+		setDataConfirmacao(LocalDateTime.now());
+	}
+
+	public void cancelar(){
+		setStatus(StatusPedido.CANCELADO);
+		setDataCancelamento(LocalDateTime.now());
+	}
+
+	public void entregar(){
+		setStatus(StatusPedido.ENTREGUE);
+		setDataEntrega(LocalDateTime.now());
+	}
+
+	private void setStatus(StatusPedido novoStatus){
+		if (getStatus().naoPodeAlterarPara(novoStatus)){
+			throw new NegocioException((String.format("Status do pedido %s não pode ser alterado de %s para %s",
+					getId(), getStatus().getDescricao(), novoStatus.getDescricao())));
+		}
+
+		this.status = novoStatus;
 	}
 
 }
