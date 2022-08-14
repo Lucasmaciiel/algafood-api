@@ -15,7 +15,7 @@ public class EnderecoForm {
     private String cep;
 
     @NotBlank
-    private String logadouro;
+    private String logradouro;
 
     @NotBlank
     private String numero;
