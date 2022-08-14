@@ -1,13 +1,8 @@
 package com.lmg.lmgfood.api.controller;
 
-import com.lmg.lmgfood.api.mapper.FormaPagamentoMapper;
 import com.lmg.lmgfood.api.mapper.PermissoesMapper;
-import com.lmg.lmgfood.api.model.FormaPagamentoDTO;
 import com.lmg.lmgfood.api.model.PermissaoDTO;
-import com.lmg.lmgfood.domain.model.Permissao;
-import com.lmg.lmgfood.domain.model.Restaurante;
 import com.lmg.lmgfood.domain.service.CadastroGrupoService;
-import com.lmg.lmgfood.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.FutureOrPresent;
 import java.util.List;
 
 @RestController

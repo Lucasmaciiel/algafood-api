@@ -30,7 +30,7 @@ public class ProdutoMapper {
 
     public List<ProdutoDTO> toList(List<Produto> produtos) {
         return produtos.stream()
-                .map(produto -> toDTO(produto))
+                .map(this::toDTO)
                 .collect(Collectors.toList());
     }
 

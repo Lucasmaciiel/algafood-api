@@ -1,6 +1,5 @@
 package com.lmg.lmgfood.api.model;
 
-import com.lmg.lmgfood.domain.model.FormaPagamento;
 import com.lmg.lmgfood.domain.model.StatusPedido;
 import lombok.Getter;
 import lombok.Setter;

@@ -27,7 +27,7 @@ public class RestauranteUsuarioResponsavelController {
 
 
     @GetMapping
-    private List<UsuarioDTO> listar(@PathVariable Long restauranteId){
+    public List<UsuarioDTO> listar(@PathVariable Long restauranteId){
         var restaurante = cadastroRestauranteService.buscarOuFalhar(restauranteId);
         return usuarioMapper.toList(restaurante.getResponsaveis());
     }

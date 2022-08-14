@@ -27,7 +27,7 @@ public class UsuarioGrupoController {
 
 
     @GetMapping
-    private List<GrupoDTO> listar(@PathVariable Long usuarioId){
+    public List<GrupoDTO> listar(@PathVariable Long usuarioId){
         var usuario = cadastroUsuarioService.buscarOuFalhar(usuarioId);
         return grupoMapper.toList(usuario.getGrupos());
     }
