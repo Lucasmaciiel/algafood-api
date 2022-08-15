@@ -53,9 +53,9 @@ public class PedidoController {
         return pedidoResumoMapper.toCollectionModel(pedidos);
     }
 
-    @GetMapping(value = "/{pedidoId}")
-    public PedidoDTO buscarPorId(@PathVariable Long pedidoId){
-        return pedidoMapper.toDTO(pedidoService.buscarOuFalhar(pedidoId));
+    @GetMapping(value = "/{codigoPedido}")
+    public PedidoDTO buscarPorId(@PathVariable String codigoPedido){
+        return pedidoMapper.toDTO(pedidoService.buscarOuFalhar(codigoPedido));
     }
 
     @PostMapping
