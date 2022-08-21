@@ -2,6 +2,7 @@ package com.lmg.lmgfood.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public class Pedido {
 	private BigDecimal valorTotal;
 
 	@CreationTimestamp
-	private LocalDateTime dataCriacao;
+	private OffsetDateTime dataCriacao;
 
 	private LocalDateTime dataConfirmacao;
 	
