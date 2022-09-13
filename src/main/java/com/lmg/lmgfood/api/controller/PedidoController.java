@@ -11,7 +11,7 @@ import com.lmg.lmgfood.domain.exception.NegocioException;
 import com.lmg.lmgfood.domain.model.Pedido;
 import com.lmg.lmgfood.domain.model.Usuario;
 import com.lmg.lmgfood.domain.repository.PedidoRepository;
-import com.lmg.lmgfood.domain.repository.filter.PedidoFilter;
+import com.lmg.lmgfood.domain.filter.PedidoFilter;
 import com.lmg.lmgfood.domain.service.EmissaoPedidoService;
 import com.lmg.lmgfood.infra.repository.specification.PedidoSpecs;
 import org.springframework.beans.factory.annotation.Autowired;

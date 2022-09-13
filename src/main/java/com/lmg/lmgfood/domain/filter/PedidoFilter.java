@@ -1,4 +1,4 @@
-package com.lmg.lmgfood.domain.repository.filter;
+package com.lmg.lmgfood.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;
