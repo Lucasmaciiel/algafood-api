@@ -3,13 +3,17 @@ package com.lmg.lmgfood.infra.repository.service;
 import com.lmg.lmgfood.domain.filter.VendaDiariaFilter;
 import com.lmg.lmgfood.domain.model.Pedido;
 import com.lmg.lmgfood.domain.model.dto.VendaDiaria;
+import com.lmg.lmgfood.domain.model.enums.StatusPedido;
 import com.lmg.lmgfood.domain.service.VendaQueryService;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Predicate;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class VendaQueryServiceImpl implements VendaQueryService {
@@ -23,6 +27,8 @@ public class VendaQueryServiceImpl implements VendaQueryService {
         var query = builder.createQuery(VendaDiaria.class);  // tipo que a consulta retorna
         var root = query.from(Pedido.class);
 
+        var predicates = new ArrayList<Predicate>();
+
         var functionDateDataCriacao = builder.function("date", LocalDate.class, root.get("dataCriacao"));
 
         var selection = builder.construct(VendaDiaria.class,
@@ -30,8 +36,24 @@ public class VendaQueryServiceImpl implements VendaQueryService {
                 builder.count(root.get("id")),
                 builder.sum(root.get("valorTotal")));
 
+        if (Objects.nonNull(filtro.getRestauranteId())){
+            predicates.add(builder.equal(root.get("restaurante"), filtro.getRestauranteId()));
+        }
+
+        if (Objects.nonNull(filtro.getDataCriacaoInicio())){
+            predicates.add(builder.greaterThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoInicio()));
+        }
+
+        if (Objects.nonNull(filtro.getDataCriacaoFim())){
+            predicates.add(builder.lessThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoFim()));
+        }
+
+        predicates.add(root.get("status").in(StatusPedido.CONFIRMADO, StatusPedido.ENTREGUE));
+
         query.select(selection);
         query.groupBy(functionDateDataCriacao);
+
+        query.where(predicates.toArray(new Predicate[0]));
 
         return entityManager.createQuery(query).getResultList();
     }
