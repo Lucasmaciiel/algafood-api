@@ -4,7 +4,6 @@ import com.lmg.lmgfood.domain.filter.VendaDiariaFilter;
 import com.lmg.lmgfood.domain.model.dto.VendaDiaria;
 import com.lmg.lmgfood.domain.service.VendaQueryService;
 import com.lmg.lmgfood.domain.service.VendaReportService;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;

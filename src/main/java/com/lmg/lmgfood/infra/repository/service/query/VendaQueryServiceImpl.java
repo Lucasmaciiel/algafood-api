@@ -19,6 +19,7 @@ import java.util.Objects;
 @Repository
 public class VendaQueryServiceImpl implements VendaQueryService {
 
+    public static final String DATA_CRIACAO = "dataCriacao";
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -31,7 +32,7 @@ public class VendaQueryServiceImpl implements VendaQueryService {
         var predicates = new ArrayList<Predicate>();
         var functionConvertTzDataCriacao = builder.function(
                 "convert_tz", Date.class,
-                root.get("dataCriacao"),
+                root.get(DATA_CRIACAO),
                 builder.literal("+00:00"),
                 builder.literal(timeOffSet));
 
@@ -47,11 +48,11 @@ public class VendaQueryServiceImpl implements VendaQueryService {
         }
 
         if (Objects.nonNull(filtro.getDataCriacaoInicio())){
-            predicates.add(builder.greaterThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoInicio()));
+            predicates.add(builder.greaterThanOrEqualTo(root.get(DATA_CRIACAO), filtro.getDataCriacaoInicio()));
         }
 
         if (Objects.nonNull(filtro.getDataCriacaoFim())){
-            predicates.add(builder.lessThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoFim()));
+            predicates.add(builder.lessThanOrEqualTo(root.get(DATA_CRIACAO), filtro.getDataCriacaoFim()));
         }
 
         predicates.add(root.get("status").in(StatusPedido.CONFIRMADO, StatusPedido.ENTREGUE));

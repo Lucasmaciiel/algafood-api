@@ -1,6 +1,7 @@
 package com.lmg.lmgfood.domain.model;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
