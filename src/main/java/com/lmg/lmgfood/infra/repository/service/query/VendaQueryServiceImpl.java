@@ -1,4 +1,4 @@
-package com.lmg.lmgfood.infra.repository.service;
+package com.lmg.lmgfood.infra.repository.service.query;
 
 import com.lmg.lmgfood.domain.filter.VendaDiariaFilter;
 import com.lmg.lmgfood.domain.model.Pedido;
