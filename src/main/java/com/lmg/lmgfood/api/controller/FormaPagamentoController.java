@@ -7,7 +7,9 @@ import com.lmg.lmgfood.domain.model.FormaPagamento;
 import com.lmg.lmgfood.domain.repository.FormaPagamentoRepository;
 import com.lmg.lmgfood.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.sql.Time;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "/formas-pagamento")
@@ -35,8 +39,11 @@ public class FormaPagamentoController {
     private FormaPagamentoMapper mapper;
 
     @GetMapping
-    public List<FormaPagamento> buscarTodas() {
-        return formaPagamentoRepository.findAll();
+    public ResponseEntity<List<FormaPagamentoDTO>> buscarTodas() {
+        List<FormaPagamentoDTO> formaPagamentoDTOS = mapper.toCollectionModel(formaPagamentoRepository.findAll());
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(100, TimeUnit.SECONDS))
+                .body(formaPagamentoDTOS);
     }
 
     @PostMapping
@@ -60,8 +67,12 @@ public class FormaPagamentoController {
 
 
     @GetMapping("/{formaPagamentoId}")
-    public FormaPagamento buscarPorId(@PathVariable Long formaPagamentoId) {
-        return cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId);
+    public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable Long formaPagamentoId) {
+
+        var formaPagamento = mapper.toDTO(cadastroFormaPagamentoService.buscarOuFalhar(formaPagamentoId));
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                .body(formaPagamento);
     }
 
     @DeleteMapping("/{formaPagamentoId}")
