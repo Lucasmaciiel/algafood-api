@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.sql.Time;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +41,7 @@ public class FormaPagamentoController {
     public ResponseEntity<List<FormaPagamentoDTO>> buscarTodas() {
         List<FormaPagamentoDTO> formaPagamentoDTOS = mapper.toCollectionModel(formaPagamentoRepository.findAll());
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(100, TimeUnit.SECONDS))
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
                 .body(formaPagamentoDTOS);
     }
 
