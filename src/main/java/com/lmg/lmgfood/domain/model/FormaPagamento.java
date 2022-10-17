@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -23,5 +26,8 @@ public class FormaPagamento {
 	
 	@Column(nullable = false)
 	private String descricao;
+
+	@UpdateTimestamp
+	private OffsetDateTime dataAtualizacao;
 	
 }
