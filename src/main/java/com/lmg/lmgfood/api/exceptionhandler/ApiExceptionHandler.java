@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.lmg.lmgfood.domain.exception.EntidadeEmUsoException;
 import com.lmg.lmgfood.domain.exception.EntidadeNaoEncontradaException;
 import com.lmg.lmgfood.domain.exception.NegocioException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,13 @@ import java.util.stream.Collectors;
 
 import static com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
+@Slf4j
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+	public static final String MSG_ERRO_GENERICA_USUARIO_FINAL
+			= "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
+			+ "o problema persistir, entre em contato com o administrador do sistema.";
 
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
@@ -124,6 +130,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
 	}
 
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
+		HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+		ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
+		String detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
+
+		log.error(ex.getMessage(), ex);
+
+		Problem problem = createProblemBuilder(status, problemType, detail)
+				.userMessage(detail)
+				.build();
+
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+	}
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
